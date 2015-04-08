@@ -2,14 +2,14 @@
 
 start_containers()
 {
-  sudo docker build -t rift $RIFT_CODE
-  sudo docker run --name rift-worker --link rift-db:db --link rift-mq:mq -p 127.0.0.1:8001:8001 -v $RIFT_CODE:/home/Rift rift \
+  docker build -t rift $RIFT_CODE
+  docker run --name rift-worker --link rift-db:db --link rift-mq:mq -p 127.0.0.1:8001:8001 -v $RIFT_CODE:/home/Rift rift \
   su -m rift-worker -c "gunicorn -b '0.0.0.0:8001' rift.api.worker.app:application & celery worker -A rift.api.worker.app"
 }
 stop_containers()
 {
-  sudo docker kill rift-worker
-  sudo docker rm rift-worker
+  docker kill rift-worker
+  docker rm rift-worker
 }
 
 if [[ -z $RIFT_CODE ]]; then
