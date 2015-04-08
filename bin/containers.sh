@@ -20,7 +20,11 @@ case "$1" in
   stop)
     stop_containers
     ;;
+  restart)
+    stop_containers
+    start_containers
+    ;;
   *)
-    echo "Usage: start_containers.sh {start|stop}"
+    echo "Usage: containers.sh {start|stop|restart}"
     exit 1
 esac
