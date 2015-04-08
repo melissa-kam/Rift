@@ -3,7 +3,7 @@
 start_containers()
 {
   docker build -t rift $RIFT_CODE
-  docker run --name rift-worker --link rift-db:db --link rift-mq:mq -p 127.0.0.1:8001:8001 -v $RIFT_CODE:/home/Rift rift \
+  docker run --name rift-worker --link rift-db:db --link rift-mq:mq -p 127.0.0.1:8001:8001 -v $RIFT_CODE:/home/Rift -d rift \
   su -m rift-worker -c "gunicorn -b '0.0.0.0:8001' rift.api.worker.app:application & celery worker -A rift.api.worker.app"
 }
 stop_containers()

@@ -3,7 +3,7 @@
 start_containers()
 {
   docker build -t rift $RIFT_CODE
-  docker run --name rift-api --link rift-mq:mq --link rift-db:db  -p 127.0.0.1:8000:8000 -v $RIFT_CODE:/home/Rift rift \
+  docker run --name rift-api --link rift-mq:mq --link rift-db:db  -p 127.0.0.1:8000:8000 -v $RIFT_CODE:/home/Rift -d rift \
   gunicorn -b '0.0.0.0:8000' rift.app:application
 }
 stop_containers()
