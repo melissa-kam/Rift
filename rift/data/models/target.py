@@ -69,6 +69,8 @@ class Target(object):
 
     @classmethod
     def decrypt_auth_data(cls, db_dict):
+        if not db_dict:
+            return
         key = common.get_secret_key()
         token = b'{0}'.format(db_dict['authentication'])
         decryptor = Fernet(key)
@@ -95,6 +97,15 @@ class Target(object):
         target_dict = db_handler.get_document(
             object_name=TARGET_COLLECTION,
             query_filter={"id": target_id})
+
+        if not target_dict:
+            targets = db_handler.get_documents(
+                object_name=TARGET_COLLECTION,
+                query_filter={"name": target_id})
+            if len(targets) > 1:
+                LOG.error('Multiple targets with the same name.')
+                return
+            target_dict = targets[0]
 
         target_dict = Target.decrypt_auth_data(target_dict)
 
