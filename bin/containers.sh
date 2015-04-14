@@ -2,8 +2,8 @@
 
 start_containers()
 {
-  docker run --name rift-db -p 27017:27017 -d mongo
-  docker run --name rift-mq -p 5672:5672 -p 15672:15672 -e RABBITMQ_PASS="password" -d tutum/rabbitmq
+  docker run --name rift-db -p 127.0.0.1:27017:27017 -d mongo
+  docker run --name rift-mq -p 127.0.0.1:5672:5672 -p 15672:15672 -e RABBITMQ_PASS="password" -d tutum/rabbitmq
 }
 stop_containers()
 {
