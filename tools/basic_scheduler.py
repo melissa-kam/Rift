@@ -23,7 +23,7 @@ from threading import Timer
 def execute_job(job):
     print "Executing ", job, " at: ", time.time()
     job_uri = "http://localhost:8000/v1/test-tenant/jobs/{uuid}".format(
-        name=job)
+        uuid=job)
     request = requests.head(job_uri)
     if request.status_code != 200:
         print "Error executing job: ", request.status_code
@@ -46,6 +46,6 @@ with open(file) as schedule_file:
         if delay > max_time:
             max_time = delay
 
-print 'Will run for at least %s minutes.' % max_time
+print 'Will run for at least %s minutes.' % (max_time/60)
 time.sleep(max_time + 60)
 print "Stop! ", time.time()

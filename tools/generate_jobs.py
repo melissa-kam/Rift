@@ -49,9 +49,10 @@ def generate_jobs():
             if not created_jobs.get(job):
                 data = defaultdict(dict)
                 data['name'] = job
-                data['targets'] = nodes
                 data['actions'] = []
                 action_data = defaultdict(dict)
+                action_data['type'] = 'remote-command'
+                action_data['targets'] = nodes
                 action_data['parameters']['command'] = action
                 data['actions'].append(action_data)
                 resp = requests.post(
