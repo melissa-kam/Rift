@@ -17,35 +17,37 @@ import csv
 import requests
 import sys
 import time
+from datetime import datetime
 from threading import Timer
 
 
 def execute_job(job):
-    print "Executing ", job, " at: ", time.time()
+    print "Executing {job} at {time}".format(
+        job=job, time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     job_uri = "http://localhost:8000/v1/test-tenant/jobs/{uuid}".format(
         uuid=job)
     request = requests.head(job_uri)
     if request.status_code != 200:
-        print "Error executing job: ", request.status_code
+        print "Error executing job: %s" % request.status_code
 
 if len(sys.argv) < 2:
     print "Usage: basic_scheduler.py <filename>"
     sys.exit(1)
 
-file = sys.argv[1]
+file_name = sys.argv[1]
 
 max_time = 0
 
-print "Start! ", time.time()
-with open(file) as schedule_file:
+print "Start! ", datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+with open(file_name) as schedule_file:
     reader = csv.reader(schedule_file)
     for values in reader:
-        delay = int(values[0].strip()) * 60
+        delay = float(values[0].strip()) * 60
         uuid = values[1].strip()
         Timer(delay, execute_job, [uuid]).start()
         if delay > max_time:
             max_time = delay
 
-print 'Will run for at least %s minutes.' % (max_time/60)
+print 'Will run for %s minutes.' % (max_time/60 + 1)
 time.sleep(max_time + 60)
-print "Stop! ", time.time()
+print "Stop! ", datetime.now().strftime('%Y-%m-%d %H:%M:%S')
