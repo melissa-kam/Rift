@@ -81,21 +81,21 @@ class Target(object):
         return db_dict
 
     @classmethod
-    def save_target(cls, target):
+    def save_target(cls, target, handler=None):
         db_dict = target.as_dict()
         db_dict['tenant_id'] = target.tenant_id
 
         # Make sure we encrypt the auth data
         db_dict = Target.encrypt_auth_data(db_dict)
 
-        db_handler = get_handler()
+        db_handler = handler or get_handler()
         db_handler.insert_document(
             object_name=TARGET_COLLECTION, document=db_dict
         )
 
     @classmethod
-    def get_target(cls, tenant_id, target_id):
-        db_handler = get_handler()
+    def get_target(cls, tenant_id, target_id, handler=None):
+        db_handler = handler or get_handler()
         target_dict = db_handler.get_document(
             object_name=TARGET_COLLECTION,
             query_filter={"id": target_id})
@@ -110,8 +110,8 @@ class Target(object):
         return Target.build_target_from_dict(tenant_id, target_dict)
 
     @classmethod
-    def get_targets(cls, tenant_id):
-        db_handler = get_handler()
+    def get_targets(cls, tenant_id, handler=None):
+        db_handler = handler or get_handler()
         targets_dict = db_handler.get_documents(
             object_name=TARGET_COLLECTION,
             query_filter={"tenant_id": tenant_id})

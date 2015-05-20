@@ -1,7 +1,8 @@
 import uuid
 from specter import Spec, expect
 from rift.data.models.target import Target
-from spec.rift.data.common import create_target, example_target_dict
+from spec.rift.data.common import (create_db_handler_stub, create_target,
+                                   example_target_dict)
 
 
 class TargetModel(Spec):
@@ -36,3 +37,22 @@ class TargetModel(Spec):
             expect(test_target.id).to.equal(self.example_dict['id'])
             expect(test_target.name).to.equal(self.example_dict['name'])
             expect(test_target.target_type).to.equal(self.example_dict['type'])
+
+    class DatabaseActions(Spec):
+        def before_all(self):
+            self.target = create_target()
+            self.example_dict = example_target_dict()
+
+        def before_each(self):
+            self.handler = create_db_handler_stub(
+                get_rtn=self.example_dict,
+                gets_rtn=[self.example_dict]
+            )
+
+        def can_save(self):
+            Target.save_target(self.target, handler=self.handler)
+            expect(len(self.handler.insert_document.calls)).to.equal(1)
+
+        def can_delete(self):
+            Target.delete_target(self.target.id, handler=self.handler)
+            expect(len(self.handler.delete_document.calls)).to.equal(1)
