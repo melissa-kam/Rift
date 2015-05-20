@@ -129,3 +129,7 @@ class Target(object):
             object_name=TARGET_COLLECTION,
             query_filter={"id": target_id}
         )
+        db_handler.delete_document(
+            object_name=TARGET_COLLECTION,
+            query_filter={"name": target_id}
+        )
