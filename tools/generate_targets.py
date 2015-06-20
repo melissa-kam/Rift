@@ -26,7 +26,7 @@ target_template = {
     "type": "cloud-server",
     "address": {
         "ip": {
-            "port":22,
+            "port": 22,
             "address": ""
         }
     },
@@ -75,7 +75,6 @@ def generate_targets():
             headers={"Content-Type": "application/json"})
 
         if resp.status_code != 201:
-            print "Error code from job creation: " + resp.status_code
-
+            print "Error code from target creation: %s" % resp.status_code
 
 generate_targets()

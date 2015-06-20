@@ -60,7 +60,7 @@ def generate_jobs():
                     data=json.dumps(data),
                     headers={"Content-Type": "application/json"})
                 if resp.status_code != 201:
-                    print "Error code from job creation: " + resp.status_code
+                    print "Error code from job creation: %s" % resp.status_code
 
                 else:
                     resp_data = json.loads(resp.content)
